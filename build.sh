@@ -1,30 +1,33 @@
 #!/bin/bash
-# Build BandFix2 and install it into ~/Applications. Does not launch it, because
-# launching changes the display and BandFix's correction should be off first.
+# Build BandFix, install it into ~/Applications and launch it.
 #
-# Signed with the same self-signed "BandFix Dev" identity as BandFix, so Open at
-# Login keeps working across rebuilds. Override with BANDFIX_SIGN_ID.
+# Signed with a self-signed "BandFix Dev" identity, so Open at Login keeps
+# working across rebuilds. Create it once: Keychain Access -> Certificate
+# Assistant -> Create a Certificate, name "BandFix Dev", Self Signed Root, type
+# Code Signing, then set its Trust for Code Signing to Always Trust. Override
+# the name with BANDFIX_SIGN_ID.
 set -e
 cd "$(dirname "$0")"
-APP="$HOME/Applications/BandFix2.app"
+APP="$HOME/Applications/BandFix.app"
 SIGN_ID="${BANDFIX_SIGN_ID:-BandFix Dev}"
 
-swiftc -O -o bandfix2 main.swift
-./bandfix2 --check
+swiftc -O -o bandfix main.swift
+./bandfix --check
 
-pkill -f "BandFix2.app/Contents/MacOS/bandfix2" 2>/dev/null || true
+pkill -f "BandFix.app/Contents/MacOS/bandfix" 2>/dev/null || true
+sleep 1
 
 mkdir -p "$APP/Contents/MacOS"
-cp bandfix2 "$APP/Contents/MacOS/bandfix2"
+cp bandfix "$APP/Contents/MacOS/bandfix"
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleExecutable</key><string>bandfix2</string>
-  <key>CFBundleIdentifier</key><string>local.bandfix2</string>
-  <key>CFBundleName</key><string>BandFix2</string>
-  <key>CFBundleDisplayName</key><string>BandFix2</string>
+  <key>CFBundleExecutable</key><string>bandfix</string>
+  <key>CFBundleIdentifier</key><string>local.bandfix</string>
+  <key>CFBundleName</key><string>BandFix</string>
+  <key>CFBundleDisplayName</key><string>BandFix</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>0.1</string>
   <key>CFBundleVersion</key><string>1</string>
@@ -36,4 +39,5 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 PLIST
 
 codesign --force --sign "$SIGN_ID" "$APP"
-echo "installed to $APP (not launched)"
+open "$APP"
+echo "installed and launched"

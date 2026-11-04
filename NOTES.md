@@ -1,4 +1,4 @@
-# BandFix2 notes
+# BandFix notes
 
 Project history lives in this repository, so record findings here.
 
@@ -11,8 +11,8 @@ Band position is confirmed correct by eye; do not re-measure it.
 
 ## What was measured
 
-Run with `tools/BandTest.html`, by eye, in Safari, with BandFix's correction
-off. Values are Display P3 drive levels, close to what the panel receives.
+Run with `tools/BandTest.html`, by eye, in Safari, with no correction running.
+Values are Display P3 drive levels, close to what the panel receives.
 
 | Content | Band last seen | Band gone by |
 |---|---|---|
@@ -35,9 +35,12 @@ that remains an inference.
 
 ## Approach
 
-BandFix looks at the screen and dims either side of the band. BandFix2 avoids
-the faulty range instead: a display-wide transfer table scales every channel of
-the built-in display, so the panel is never driven above the cap.
+An earlier app with this name watched the screen and dimmed either side of the
+band. It missed saturated colours and busy screens, and was removed.
+
+This app avoids the faulty range instead: a display-wide transfer table scales
+every channel of the built-in display, so the panel is never driven above the
+cap. It needs no screen capture, Screen Recording permission or overlays.
 
 It scales rather than clips, which is what the test page's capped rows did and
 keeps gradients and highlights distinct. Default cap: 70%, the highest level
@@ -49,12 +52,18 @@ Update this table as things are checked.
 
 | Question | Status |
 |---|---|
-| Does the real cap hide the band as the test page did? | Not yet checked by eye |
-| Battery compared with BandFix at the same perceived brightness | Not measured |
-| HDR video and photos: do they bypass the cap? | Not checked |
-| Does the cap survive real sleep, wake and lock? | Not checked; see below |
-| Do gradients show visible steps? | Not checked |
+| Does the real cap hide the band as the test page did? | Yes, judged by eye: "looks perfect" |
+| Does it work again after a restart, with Open at Login on? | Yes, judged by eye |
+| Battery compared with the earlier app at the same perceived brightness | Not measured |
+| HDR video and photos: do they bypass the cap? | Not reported |
+| Does the cap survive real sleep, wake and lock? | Not reported; see below |
+| Do gradients show visible steps? | Not reported |
 | Night Shift and True Tone interaction | Not checked |
+
+Costs that follow from the method: maximum brightness falls to about 225 nits
+from about 500, and raising the slider to compensate uses more backlight power.
+The test page cannot be used while the cap is on, because the cap also lowers
+its values. Quit the app first.
 
 ## Verified by test (2026-11-04)
 
@@ -74,12 +83,11 @@ These read back the live table. None of them shows what the panel emits.
 - The cap only reapplies when the live table's peak exceeds the expected peak.
   It never re-caps a table that is already capped, so the dimming cannot compound.
 - Only the built-in display is touched.
-- BandFix's correction must be off while testing, or both apps dim the screen.
 
 ## Commands
 
-    ./build.sh                  build and install to ~/Applications; does not launch
-    bandfix2 --check            table arithmetic only; does not touch the display
-    bandfix2 --read             print the live table's peak
-    bandfix2 --selftest         apply, verify and restore; dims the screen briefly
-    bandfix2 --apply-and-exit   apply and exit without restoring; dims until macOS restores
+    ./build.sh                 build, install to ~/Applications and launch
+    bandfix --check            table arithmetic only; does not touch the display
+    bandfix --read             print the live table's peak
+    bandfix --selftest         apply, verify and restore; dims the screen briefly
+    bandfix --apply-and-exit   apply and exit without restoring; macOS undoes it on exit

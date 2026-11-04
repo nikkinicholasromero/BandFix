@@ -1,7 +1,7 @@
 import Cocoa
 import ServiceManagement
 
-// BandFix2 — keeps the built-in display out of the drive range where its band
+// BandFix — keeps the built-in display out of the drive range where its band
 // fault appears, by scaling a display-wide transfer table. It never looks at
 // the screen. See NOTES.md for the measurements behind this.
 
@@ -135,7 +135,7 @@ if CommandLine.arguments.count > 1 {
     case "--selftest": exit(runSelfTest())
     case "--apply-and-exit": exit(runApplyAndExit())
     default:
-        print("usage: bandfix2 [--check | --read | --selftest | --apply-and-exit]")
+        print("usage: bandfix [--check | --read | --selftest | --apply-and-exit]")
         exit(2)
     }
 }
@@ -251,7 +251,7 @@ final class Controller: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         menu.addItem(.separator())
 
-        menu.addItem(NSMenuItem(title: "Quit BandFix2",
+        menu.addItem(NSMenuItem(title: "Quit BandFix",
                                 action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         statusItem.menu = menu
     }
@@ -264,7 +264,7 @@ final class Controller: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func updateIcon() {
         statusItem.button?.image = NSImage(systemSymbolName: on ? "sun.max.fill" : "sun.max",
-                                           accessibilityDescription: "BandFix2")
+                                           accessibilityDescription: "BandFix")
     }
 
     @objc func toggleEnabled() {
@@ -286,7 +286,7 @@ final class Controller: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 }
             }
         } catch {
-            NSLog("BandFix2: login item change failed: %@", error.localizedDescription)
+            NSLog("BandFix: login item change failed: %@", error.localizedDescription)
         }
     }
 
@@ -327,13 +327,13 @@ final class Controller: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func writeCap() {
         guard let base = original, let id = originalDisplay else { return }
         if !base.capped(at: cap).write(id) {
-            NSLog("BandFix2: could not write the transfer table")
+            NSLog("BandFix: could not write the transfer table")
         }
     }
 
     func removeCap() {
         if let base = original, let id = originalDisplay, !base.write(id) {
-            NSLog("BandFix2: could not restore the transfer table")
+            NSLog("BandFix: could not restore the transfer table")
         }
         original = nil
         originalDisplay = nil
