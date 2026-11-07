@@ -139,9 +139,39 @@ and would have stepped down on any sighting.
 
 After that, the user checked 75% with `tools/BandTest.html` and reported it
 "still good everywhere", and chose 75% as the default. This conflicts with the
-first measurements, where grey showed the band at 75%, so 75% has no margin.
-If a faint band shows in real use, 74% is the last level confirmed by the
-guided test.
+first measurements, where grey showed the band at 75%. The blind test below
+settled it.
+
+Blind test, same day, in a different room and light: 35 full-screen colours
+(white, red, green, blue, yellow, magenta, cyan) at caps of 70, 74, 75, 76 and
+80% in random order, with the cap hidden from the viewer.
+
+| Cap | Band seen |
+|---|---|
+| 70% | 0 of 7 |
+| 74% | 0 of 7 |
+| 75% | 0 of 7 |
+| 76% | 0 of 7 |
+| 80% | 5 of 7 (missed green and blue) |
+
+The 80% check shows the eyes were catching the band, and nothing below it
+showed. This supersedes the first measurement of grey at 75%.
+
+A second blind test right after, 42 screens, same colours:
+
+| Cap | Band seen |
+|---|---|
+| 70% | 0 of 7 |
+| 76% | 1 of 7 (white) |
+| 77% | 1 of 7 (yellow) |
+| 78% | 2 of 7 (white, yellow) |
+| 79% | 3 of 7 (white, yellow, magenta) |
+| 85% | 6 of 7 (missed blue) |
+
+The band fades in gradually from about 76%, first on white and yellow, which
+drive two or three channels fully and are the brightest. Blue and green alone
+show it last. 75% was clean in every trial across both tests, and 76% was not,
+once on white, the most common content. So 75% is the highest safe cap.
 
 Light compared with 70%: about 13% more at 74% and 16% more at 75%
 ((cap/0.70)^2.2). Not yet checked over a day of real use.
