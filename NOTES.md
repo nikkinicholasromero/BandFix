@@ -55,7 +55,7 @@ Update this table as things are checked.
 | Does the real cap hide the band as the test page did? | Yes, judged by eye: "looks perfect" |
 | Does it work again after a restart, with Open at Login on? | Yes, judged by eye |
 | Battery compared with the earlier app at the same perceived brightness | Not measured |
-| HDR video and photos: do they bypass the cap? | Not reported |
+| HDR video and photos: do they bypass the cap? | No: HDR white up to 3.0x showed no band and no extra brightness with the cap on (2026-11-07) |
 | Does the cap survive real sleep, wake and lock? | Not reported; see below |
 | Do gradients show visible steps? | Not reported |
 | Night Shift and True Tone interaction | Not checked |
@@ -76,6 +76,43 @@ These read back the live table. None of them shows what the panel emits.
   it exits, so a crash cannot leave the screen stuck dim.
 - `CGDisplayRestoreColorSyncSettings` from another process did not change the
   table this app had set.
+
+## Tried and ruled out: brightness from the HDR backlight (2026-11-07)
+
+Idea: keep the pixels under the cap and get brightness back from the XDR
+backlight, which can exceed the 500-nit SDR limit while HDR headroom is active.
+Display: 16" MacBook Pro, M2 Max (Mac14,6), Liquid Retina XDR, potential
+headroom 16x, 3.2x at full brightness.
+
+Tested by eye with a scratch test app (not kept in the repo), BandFix off,
+headroom confirmed at 3.2x by the app:
+
+- A small HDR patch, so ordinary white was on screen while headroom was active:
+  band visible on the white. Turning HDR on does not lower the drive of
+  ordinary white, likely because the backlight zones are dimmed separately.
+- The full screen filled with HDR white at 1.0x to 3.0x of ordinary white:
+  band visible at every level.
+- The same full-screen test with BandFix on at 70%: no band at any level, but
+  also no visible change in brightness between levels. The cap holds HDR
+  content back too, so the extra backlight never reaches the screen.
+
+Conclusion: without the cap, brighter content drives the pixels into the faulty
+range; with the cap, it gets no brighter. The backlight cannot be used to win
+brightness back, so about 225 nits at a 70% cap is the practical limit. Note that
+headroom winds down over several seconds after HDR content disappears, so a
+quick on/off comparison stays in HDR mode the whole time.
+
+## Tried and ruled out: keeping darker shades at full level (2026-11-07)
+
+Idea: leave levels up to 50% unchanged and squeeze only 50-100% into 50-70%,
+so dark and middle shades look as they would without the cap.
+
+Tried as a menu option and judged by eye: everything looked washed out, and
+borders and lines lost contrast. Darks stay put while white is still held at
+70%, so the gap between them shrinks, and light greys (about 66.5% for an 80%
+input) nearly merge with white. Scaling every level evenly keeps the
+proportions, so a dimmer but crisp picture beats a brighter, flat one. The
+option was removed.
 
 ## Safety properties
 
