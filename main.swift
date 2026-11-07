@@ -10,7 +10,7 @@ import ServiceManagement
 let K_ON  = "enabled"
 let K_CAP = "capPercent"
 
-let DEF_CAP = 70        // the highest level confirmed for every colour tested
+let DEF_CAP = 75        // judged clean on every colour by eye; see NOTES.md
 let MIN_CAP = 50        // a bad stored value must not be able to black out the screen
 let MAX_CAP = 100
 

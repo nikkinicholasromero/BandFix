@@ -43,8 +43,8 @@ every channel of the built-in display, so the panel is never driven above the
 cap. It needs no screen capture, Screen Recording permission or overlays.
 
 It scales rather than clips, which is what the test page's capped rows did and
-keeps gradients and highlights distinct. Default cap: 70%. 74% was later
-confirmed clean for every colour too (see below).
+keeps gradients and highlights distinct. Default cap: 75% (see "Caps of
+71-75%" below). It was 70% until 2026-11-07.
 
 ## Costs and unknowns
 
@@ -127,7 +127,7 @@ brighter preset with the cap on would be brighter without the band.
   protected by SIP (Lunar FAQ, BetterDisplay discussion 4983). Whether turning
   SIP off restores this is unconfirmed; not tried.
 
-## Caps of 71-74% (2026-11-07)
+## Caps of 71-75% (2026-11-07)
 
 Scratch test app (not kept in the repo) writing the same scaled table as
 BandFix, full-screen solid colours, P3-500 preset, BandFix quit. Started at 74%
@@ -137,9 +137,14 @@ and would have stepped down on any sighting.
   orange and sky.
 - 70% control: hidden on all of them.
 
-Grey showed the band at 75% in the first measurements, so 74% sits one step
-below the fault with no margin. It gives about 13% more light than 70%
-((0.74/0.70)^2.2). Not yet checked over a day of real use.
+After that, the user checked 75% with `tools/BandTest.html` and reported it
+"still good everywhere", and chose 75% as the default. This conflicts with the
+first measurements, where grey showed the band at 75%, so 75% has no margin.
+If a faint band shows in real use, 74% is the last level confirmed by the
+guided test.
+
+Light compared with 70%: about 13% more at 74% and 16% more at 75%
+((cap/0.70)^2.2). Not yet checked over a day of real use.
 
 ## Refresh rate (2026-11-07)
 
