@@ -43,8 +43,8 @@ every channel of the built-in display, so the panel is never driven above the
 cap. It needs no screen capture, Screen Recording permission or overlays.
 
 It scales rather than clips, which is what the test page's capped rows did and
-keeps gradients and highlights distinct. Default cap: 70%, the highest level
-confirmed for every colour. 71-74% has not been tested.
+keeps gradients and highlights distinct. Default cap: 70%. 74% was later
+confirmed clean for every colour too (see below).
 
 ## Costs and unknowns
 
@@ -96,11 +96,85 @@ headroom confirmed at 3.2x by the app:
   also no visible change in brightness between levels. The cap holds HDR
   content back too, so the extra backlight never reaches the screen.
 
+- A grid of single-pixel dots at full HDR headroom (every 48, 24 or 12 px),
+  hoping each backlight zone would brighten for its dot and the display would
+  drive the rest of the zone lower: band hidden only at today's BandFix level,
+  visible at 1.3x and above at every spacing.
+- What brightness apps such as xdr-light, BetterDisplay and Vivid do (a 1x1 HDR
+  trigger plus a colour table above 1.0, here x1.4), reproduced rather than
+  installed: band visible.
+
 Conclusion: without the cap, brighter content drives the pixels into the faulty
 range; with the cap, it gets no brighter. The backlight cannot be used to win
 brightness back, so about 225 nits at a 70% cap is the practical limit. Note that
 headroom winds down over several seconds after HDR content disappears, so a
 quick on/off comparison stays in HDR mode the whole time.
+
+## Display presets (2026-11-07)
+
+A preset sets the nits of SDR white, which is a backlight setting, so a
+brighter preset with the cap on would be brighter without the band.
+
+- This Mac (macOS 27.2, SIP on) has no "Apple Display (P3-600 nits)" preset.
+- "Apple Display (P3-500 nits)" looked the same as "Apple XDR Display
+  (P3-1600 nits)" at full brightness: both give 500-nit white
+  (corebrightnessdiag: MaxNits 500), and the cap still hid the band. It turns
+  HDR off, which costs nothing here because the cap already holds HDR down.
+  Brightness keys, the slider, auto-brightness and True Tone all still work in
+  it. The user now runs P3-500. The scratch HDR test apps need P3-1600.
+- Custom presets above the display's bounds were how brightness apps raised
+  SDR white natively, but macOS 26.3 and later removes them, with the check
+  protected by SIP (Lunar FAQ, BetterDisplay discussion 4983). Whether turning
+  SIP off restores this is unconfirmed; not tried.
+
+## Caps of 71-74% (2026-11-07)
+
+Scratch test app (not kept in the repo) writing the same scaled table as
+BandFix, full-screen solid colours, P3-500 preset, BandFix quit. Started at 74%
+and would have stepped down on any sighting.
+
+- 74%: band hidden on white, red, green, blue, yellow, magenta, cyan, salmon,
+  orange and sky.
+- 70% control: hidden on all of them.
+
+Grey showed the band at 75% in the first measurements, so 74% sits one step
+below the fault with no margin. It gives about 13% more light than 70%
+((0.74/0.70)^2.2). Not yet checked over a day of real use.
+
+## Refresh rate (2026-11-07)
+
+Fixed 60 Hz versus ProMotion (up to 120 Hz), BandFix off, white page: the band
+looked exactly the same. So it is not a charging-time fault that more time per
+refresh would fix, and the refresh rate has no bearing on the cap.
+
+## Works: brightening only the band (2026-11-07)
+
+Scratch test apps (not kept in the repo), BandFix off, full brightness, HDR
+headroom 3.2x. The whole screen showed one colour, and only the band
+(864-1080 pt) was multiplied by a boost in HDR, adjusted by eye until the band
+blended in. Edges were judged clean ("it looks good"), and no colour looked
+tinted after matching.
+
+| Colour (Display P3 drive) | Boost that matched |
+|---|---|
+| White | 1.08 (twice) |
+| Light grey 85% | 1.08 |
+| Grey 75% | 1.02 |
+| Grey 60%, grey 40% | 1.00 (1.08 was lowered to match) |
+| Red | 1.08 |
+| Green, yellow | 1.12 |
+| Blue, magenta, cyan | 1.10 |
+| Orange (1, .6, 0) | 1.06 |
+| Salmon (1, .5, .5), sky (.5, .8, 1) | 1.04 |
+
+So the band loses roughly 8-12% in any channel driven at about 85% or more,
+little at 75%, and none at 60% or below. Mixed colours need less overall
+because only their strongly driven channels fall short. The steps were 0.02,
+so differences of 0.02 between colours may be noise.
+
+Consequence: one fixed boost cannot fit everything. 1.08 suits white but makes
+the band visibly lighter on mid greys. A correct fix has to boost each channel
+of each band pixel according to how hard that channel is driven.
 
 ## Tried and ruled out: keeping darker shades at full level (2026-11-07)
 
